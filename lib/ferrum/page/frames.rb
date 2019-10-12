@@ -15,7 +15,7 @@ module Ferrum
         if id
           @frames[id]
         elsif execution_id
-          frames.find { |f| f.execution_id == execution_id }
+          frames.find { |f| f.current_execution_id == execution_id }
         elsif name
           frames.find { |f| f.name == name }
         else
@@ -88,7 +88,7 @@ module Ferrum
           context_id = params.dig("context", "id")
           frame_id = params.dig("context", "auxData", "frameId")
           frame = @frames[frame_id] || Frame.new(frame_id, self)
-          frame.execution_id = context_id
+          frame.execution_id = context_id unless frame.current_execution_id
 
           @main_frame ||= frame
           @frames[frame_id] ||= frame
