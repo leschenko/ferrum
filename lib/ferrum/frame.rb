@@ -37,6 +37,10 @@ module Ferrum
       @parent_id.nil?
     end
 
+    def current_execution_id
+      @execution_id
+    end
+
     def execution_id
       raise NoExecutionContextError unless @execution_id
       @execution_id
