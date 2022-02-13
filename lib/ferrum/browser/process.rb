@@ -96,7 +96,10 @@ module Ferrum
             ObjectSpace.define_finalizer(self, self.class.process_killer(@xvfb.pid))
           end
 
-          @pid = ::Process.spawn(Hash(@xvfb&.to_env), *@command.to_a, process_options)
+          env = Hash(@xvfb&.to_env)
+          env.merge!(@command.options[:env])
+          @pid = ::Process.spawn(env, *@command.to_a, process_options)
+
           ObjectSpace.define_finalizer(self, self.class.process_killer(@pid))
 
           parse_ws_url(read_io, @process_timeout)
