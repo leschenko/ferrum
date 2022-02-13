@@ -53,10 +53,12 @@ module Ferrum
     alias set_content content=
 
     def execution_id
-      value = @execution_id.borrow(@page.timeout, &:itself)
+      value = @execution_id.value
       raise NoExecutionContextError if value.instance_of?(Object)
-
       value
+    rescue NoExecutionContextError
+      @page.event.reset
+      @page.event.wait(@page.timeout) ? retry : raise
     end
 
     def execution_id=(value)
